@@ -1,33 +1,36 @@
+# .github/workflows/generate-snake.yml
 # --------------------------------------------
-# nightly snake animation (00:00 UTC) + manual
+# Generates light & dark SVGs every night and
+# pushes them to the `output` branch.
 # --------------------------------------------
+
 name: Generate Snake Animation
 
 on:
   schedule:
-    - cron: '0 0 * * *'      # every day
-  workflow_dispatch:          # manual trigger
+    - cron: '0 0 * * *'        # daily @ 00 UTC
+  workflow_dispatch:            # manual trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. checkout
+      # 1️⃣ check out this repo
       - uses: actions/checkout@v3
 
-      # 2. generate SVGs with authenticated API calls
-      - name: Generate Snake SVGs
+      # 2️⃣ generate two SVGs (light & dark) **authenticated**
+      - name: Generate snake SVGs
         uses: Platane/snk@v3
         with:
           github_user_name: chaitanya21kumar
-          github_token:     ${{ secrets.GITHUB_TOKEN }}      # ✅ NEW
+          github_token:     ${{ secrets.GITHUB_TOKEN }}
           outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+            dist/snake-light.svg
+            dist/snake-dark.svg?palette=github-dark
 
-      # 3. push /dist to `output` branch (GitHub Pages)
-      - name: Publish to output branch
+      # 3️⃣ publish /dist to the `output` branch (GitHub Pages)
+      - name: Deploy SVGs to output branch
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: output
