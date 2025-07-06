@@ -2,19 +2,19 @@ name: Generate Snake Animation
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # ✅ Daily automatic run
-  workflow_dispatch:       # ✅ Manual trigger if needed
+    - cron: "0 0 * * *"  # 🔁 Daily run at 12:00 AM UTC
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: github-pages   # ✅ FIXED: GitHub Pages env needed for deploy
+    environment: github-pages   # ✅ Required to deploy to GitHub Pages
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Generate Snake Animation
+      - name: Generate Snake SVG & GIF
         uses: Platane/snk@master
         with:
           github_user_name: chaitanya21kumar
