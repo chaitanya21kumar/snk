@@ -1,39 +1,36 @@
-# .github/workflows/generate-snake.yml
-# -------------------------------------------------
-# Generates an animated “snake” of your contributions
-# every night at 00:00 UTC and pushes it to `output/`
-# -------------------------------------------------
-
+# --------------------------------------------
+# nightly snake animation (00:00 UTC) + manual
+# --------------------------------------------
 name: Generate Snake Animation
 
 on:
   schedule:
-    - cron: '0 0 * * *'        # daily @ 00:00 UTC
-  workflow_dispatch:            # manual trigger button
+    - cron: '0 0 * * *'      # every day
+  workflow_dispatch:          # manual trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣  checkout this repo
-      - name: Checkout
-        uses: actions/checkout@v3
+      # 1. checkout
+      - uses: actions/checkout@v3
 
-      # 2️⃣  generate SVG (and dark-mode SVG) with the **stable** snk@v3 release
+      # 2. generate SVGs with authenticated API calls
       - name: Generate Snake SVGs
         uses: Platane/snk@v3
         with:
-          github_user_name: chaitanya21kumar     # ← your username
-          outputs: |                             # files to create in /dist
+          github_user_name: chaitanya21kumar
+          github_token:     ${{ secrets.GITHUB_TOKEN }}      # ✅ NEW
+          outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      # 3️⃣  publish /dist to the `output` branch (GitHub Pages)
-      - name: Deploy to GitHub Pages (output branch)
+      # 3. push /dist to `output` branch (GitHub Pages)
+      - name: Publish to output branch
         uses: crazy-max/ghaction-github-pages@v3
         with:
-          target_branch: output                  # <-- do not change
-          build_dir: dist                       # directory created above
+          target_branch: output
+          build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
