@@ -2,7 +2,7 @@ name: Generate Snake Animation
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # still runs daily
+    - cron: "0 0 * * *"  # Runs daily at 00:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -18,10 +18,13 @@ jobs:
           svg_out_path: dist/github-contribution-grid-snake.svg
           gif_out_path: dist/github-contribution-grid-snake.gif
 
-      - name: Push to output branch
+      - name: Deploy to GitHub Pages (output branch)
         uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: output
           build_dir: dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # ✅ Fix: Add environment to comply with GitHub Pages deployment policy
+        environment:
+          name: github-pages
